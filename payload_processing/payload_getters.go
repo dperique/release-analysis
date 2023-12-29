@@ -9,22 +9,22 @@ import (
 	goutils "github.com/dperique/goutils"
 )
 
-type payloadGetter interface {
+type PayloadGetter interface {
 	// Given a release version and stream, return a list of payload items.
 	getUrls(aVersion, aStream string) []ReleasePayload
 }
 
 // These are the three ways we can get the payload items.
-type rcWebpagePayloadGetter struct{}
-type sippyDBPayloadGetter struct{}
-type rcAPIPayloadGetter struct{}
+type RcWebpagePayloadGetter struct{}
+type SippyDBPayloadGetter struct{}
+type RcAPIPayloadGetter struct{}
 
 // getUrls returns a list of URLs (one for each payload) given a version and type (e.g., version=4.13, type=nightly)
 // from the main release controller page.
 // aVersion is like 4.12, 4.13, 4.14
 // aStream is like nightly or ci
 // TODO: this is a little wacky in that we "chop" parts to get to the part we want. Convert to getUrlsFromSippy.
-func (g rcWebpagePayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
+func (g RcWebpagePayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
 	releaseStr := fmt.Sprintf("%s/#%s.0-0.%s", releaseUrlPrefix, aVersion, aStream)
 	body, err := getBodyTimeout(releaseStr, BODY_TIMEOUT)
 	var ret []ReleasePayload
@@ -129,7 +129,7 @@ func (g rcWebpagePayloadGetter) getUrls(aVersion, aStream string) []ReleasePaylo
 // This is a cleaner way to do this but we miss out on the timeStr and timeDetailStr so we
 // give the user the option.
 // aStream is one of ci or nightly.
-func (g sippyDBPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
+func (g SippyDBPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
 	sippyUrl := "https://sippy.dptools.openshift.org/api/releases/tags?&release=%s"
 	body, err := getBodyTimeout(fmt.Sprintf(sippyUrl, aVersion), BODY_TIMEOUT)
 	var ret []ReleasePayload
@@ -183,7 +183,7 @@ func (g sippyDBPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload
 
 // getUrls fetches the urls from the release-controller api.  This is a cleaner way to
 // do this but we miss out on the timeStr and timeDetailStr so we give the user the option.
-func (g rcAPIPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
+func (g RcAPIPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
 	const relContStr = "https://amd64.ocp.releases.ci.openshift.org/api/v1/releasestream/%s.0-0.%s/tags"
 	releaseStr := fmt.Sprintf(relContStr, aVersion, aStream)
 	fmt.Println(releaseStr)
@@ -225,23 +225,6 @@ func (g rcAPIPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
 	return ret
 }
 
-func GetPayloadItems(releaseVersion, releaseStream string, dbMode string) []ReleasePayload {
-	var payloadItems []ReleasePayload
-	var payloadGetter payloadGetter
-
-	switch dbMode {
-	case "rcWebpage":
-		payloadGetter = rcWebpagePayloadGetter{}
-	case "sippyDB":
-		payloadGetter = sippyDBPayloadGetter{}
-	case "rcAPI":
-		payloadGetter = rcAPIPayloadGetter{}
-	default:
-		fmt.Println("Unknown dbMode; defaulting to rcWebpage")
-		payloadGetter = rcWebpagePayloadGetter{}
-	}
-
-	payloadItems = payloadGetter.getUrls(releaseVersion, releaseStream)
-
-	return payloadItems
+func GetPayloadItems(releaseVersion, releaseStream string, p PayloadGetter) []ReleasePayload {
+	return p.getUrls(releaseVersion, releaseStream)
 }
