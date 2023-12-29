@@ -7,8 +7,8 @@ import (
 )
 
 var analysisOpts struct {
-	prowJobUrl string
-	payloadUrl string
+	url string
+	addDetails bool
 }
 
 // Create the analysis command
@@ -18,15 +18,14 @@ var AnalysisCmd = &cobra.Command{
 	Long:  `View analysis of a payload url or prow job (add more details)...`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		// Your analysis command logic here
-		//url := args[0]
 		fmt.Println("analysis called")
-		// Rest of your code...
+		analysisOpts.url = args[0]
+		fmt.Println("url:", analysisOpts.url)
+		fmt.Println("addDetails:", analysisOpts.addDetails)
 	},
 }
 
 func NewAnalysisCmd() *cobra.Command {
-	AnalysisCmd.Flags().StringVarP(&analysisOpts.prowJobUrl, "prowjob-url", "j", "", "Prowjob url")
-	AnalysisCmd.Flags().StringVarP(&analysisOpts.payloadUrl, "payload-url", "p", "", "Payload url")
+	AnalysisCmd.Flags().BoolVarP(&analysisOpts.addDetails, "add_details", "a", false, "Payload url")
 	return AnalysisCmd
 }

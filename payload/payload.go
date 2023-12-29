@@ -10,6 +10,7 @@ var payloadOpts struct {
 	version           string
 	stream            string
 	showAllUrl        bool
+	showAggrTimes     bool
 	showSuccess       bool
 	dbMode            string
 	printTestDetail   bool
@@ -23,17 +24,24 @@ var PayloadCmd = &cobra.Command{
 	Long:  `View payload of release-controller given a Version (e.g., 4.15, 4.16) and a Stream (e.g., nightly, ci)`,
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		version := args[0]
-		stream := args[1]
-		fmt.Println("payload called with version:", version, "and stream:", stream)
-		// Rest of your code...
+		payloadOpts.version = args[0]
+		payloadOpts.stream = args[1]
+		fmt.Println("version:", payloadOpts.version)
+		fmt.Println("stream:", payloadOpts.stream)
+		fmt.Println("showAllUrl:", payloadOpts.showAllUrl)
+		fmt.Println("showAggrTimes:", payloadOpts.showAggrTimes)
+		fmt.Println("showSuccess:", payloadOpts.showSuccess)
+		fmt.Println("dbMode:", payloadOpts.dbMode)
+		fmt.Println("printTestDetail:", payloadOpts.printTestDetail)
+		fmt.Println("showAggrJobDetail:", payloadOpts.showAggrJobDetail)
 	},
 }
 
 func NewPayloadCmd() *cobra.Command {
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAllUrl, "showAllUrl", "a", false, "Show all url")
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAllUrl, "showAllUrl", "a", true, "Show all url")
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrTimes, "showAggrTimes", "s", true, "Show aggregated times")
 	PayloadCmd.Flags().BoolVarP(&payloadOpts.showSuccess, "showSuccess", "c", false, "Show success")
-	PayloadCmd.Flags().StringVarP(&payloadOpts.dbMode, "dbMode", "d", "", "DB mode (rcWebpage, sippyDB, rcAPI)")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.dbMode, "dbMode", "d", "rcWebpage", "DB mode (rcWebpage, sippyDB, rcAPI)")
 	PayloadCmd.Flags().BoolVarP(&payloadOpts.printTestDetail, "printTestDetail", "t", false, "Print test detail")
 	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrJobDetail, "showAggrJobDetail", "j", false, "Show aggregated job detail")
 	return PayloadCmd
