@@ -86,7 +86,7 @@ func (a *analysisOptsType) Run() {
 			aggrJobId = match[3]
 		} else {
 			fmt.Println("No idea what the aggregated job name is")
-			os.Exit(1)
+			return
 		}
 
 		if shortName, ok := shortNamesMap[aggrJobName]; ok {
@@ -95,6 +95,7 @@ func (a *analysisOptsType) Run() {
 			aggrJobUrlList, err := payload_processing.GetJobRunUrls(aggrJobUrl)
 			if err != nil {
 				fmt.Println(err)
+				return
 			}
 			// Put the aggregated job as the first url for convenience
 			totalJobUrlList := append([]string{aggrJobUrl}, aggrJobUrlList...)
@@ -110,7 +111,7 @@ func (a *analysisOptsType) Run() {
 			fmt.Println("],")
 		} else {
 			fmt.Println("Unable to determine short name for aggr job (needed to get a unit tests)")
-			os.Exit(1)
+			return
 		}
 	}
 	if mode == "plain" {
@@ -127,14 +128,14 @@ func (a *analysisOptsType) Run() {
 			plainJobName = match[2]
 		} else {
 			fmt.Println("No idea what the plain job name is")
-			os.Exit(1)
+			return
 		}
 		fmt.Println(plainJobName)
 		if shortName, ok := shortNamesMap[plainJobName]; ok {
 			payload_processing.PrintPlainSummaryTests(plainJobUrl, shortName, true, a.addDetails, "")
 		} else {
 			fmt.Println("Unable to determine short name for plain job (needed to get a unit tests)")
-			os.Exit(1)
+			return
 		}
 		//https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/periodic-ci-openshift-release-master-ci-4.14-e2e-aws-ovn-upgrade/1649404378685116416
 		// periodic-ci-openshift-release-master-ci-4.14-e2e-aws-sdn-serial
@@ -151,5 +152,4 @@ func (a *analysisOptsType) Run() {
 		}
 		payload_processing.ProcessPayloadItem(payloadItem, true, true, false, true, true)
 	}
-	os.Exit(0)
 }
