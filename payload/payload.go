@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var payloadOpts struct {
+type payloadOptsType struct {
 	version           string
 	stream            string
 	showAllUrl        bool
@@ -17,6 +17,8 @@ var payloadOpts struct {
 	showAggrJobDetail bool
 }
 
+var payloadOpts payloadOptsType
+
 // Create the payload command
 var PayloadCmd = &cobra.Command{
 	Use:   "payload aVersion aStream",
@@ -26,14 +28,8 @@ var PayloadCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		payloadOpts.version = args[0]
 		payloadOpts.stream = args[1]
-		fmt.Println("version:", payloadOpts.version)
-		fmt.Println("stream:", payloadOpts.stream)
-		fmt.Println("showAllUrl:", payloadOpts.showAllUrl)
-		fmt.Println("showAggrTimes:", payloadOpts.showAggrTimes)
-		fmt.Println("showSuccess:", payloadOpts.showSuccess)
-		fmt.Println("dbMode:", payloadOpts.dbMode)
-		fmt.Println("printTestDetail:", payloadOpts.printTestDetail)
-		fmt.Println("showAggrJobDetail:", payloadOpts.showAggrJobDetail)
+
+		payloadOpts.Run()
 	},
 }
 
@@ -45,4 +41,18 @@ func NewPayloadCmd() *cobra.Command {
 	PayloadCmd.Flags().BoolVarP(&payloadOpts.printTestDetail, "printTestDetail", "t", false, "Print test detail")
 	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrJobDetail, "showAggrJobDetail", "j", false, "Show aggregated job detail")
 	return PayloadCmd
+}
+
+func (p *payloadOptsType) Run() {
+	fmt.Println("Run called")
+	fmt.Println("version:", p.version)
+	fmt.Println("stream:", p.stream)
+	fmt.Println("showAllUrl:", p.showAllUrl)
+	fmt.Println("showAggrTimes:", p.showAggrTimes)
+	fmt.Println("showSuccess:", p.showSuccess)
+	fmt.Println("dbMode:", p.dbMode)
+	fmt.Println("printTestDetail:", p.printTestDetail)
+	fmt.Println("showAggrJobDetail:", p.showAggrJobDetail)
+
+	defer fmt.Println("Finished listing the payloads")
 }
