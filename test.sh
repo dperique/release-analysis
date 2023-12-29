@@ -1,5 +1,5 @@
 ./release-analysis payload 4.15 nightly -d rcWebpage ;# rc webpage
-./release-analysis payload 4.15 nightly -d sippyDB   ;# sippyDB
+./release-analysis payload 4.15 ci      -d sippyDB   ;# sippyDB
 ./release-analysis payload 4.15 nightly -d rcAPI 0   ;# rc API
 ./release-analysis payload 4.15 nightly -d rcWebpax  ;# bad argument, default to rcWebpage
 

@@ -27,8 +27,18 @@ var PayloadCmd = &cobra.Command{
 	Long:  `View payload of release-controller given a Version (e.g., 4.15, 4.16) and a Stream (e.g., nightly, ci)`,
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		payloadOpts.version = args[0]
-		payloadOpts.stream = args[1]
+		version := args[0]
+		if version != "4.13" && version != "4.14" && version != "4.15" && version != "4.16" {
+			fmt.Println("Invalid version. Version must be between 4.13 and 4.16.")
+			return
+		}
+		payloadOpts.version = version
+		stream := args[1]
+		if stream != "nightly" && stream != "ci" {
+			fmt.Println("Invalid stream. Stream must be either 'nightly' or 'ci'.")
+			return
+		}
+		payloadOpts.stream = stream
 
 		payloadOpts.Run()
 	},
