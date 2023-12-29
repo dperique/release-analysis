@@ -6,17 +6,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var payloadOpts struct {
+	version           string
+	stream            string
+	showAllUrl        bool
+	showSuccess       bool
+	dbMode            string
+	printTestDetail   bool
+	showAggrJobDetail bool
+}
+
 // Create the payload command
 var PayloadCmd = &cobra.Command{
-	Use:   "payload [version] [stream]",
-	Short: "View payload of release-controller",
-	Long:  `View payload of release-controller (add more detail)`,
-	Args:  cobra.MinimumNArgs(2),
+	Use:   "payload aVersion aStream",
+	Short: "View payload of release-controller given a Version (e.g., 4.15, 4.16) and a Stream (e.g., nightly, ci)",
+	Long:  `View payload of release-controller given a Version (e.g., 4.15, 4.16) and a Stream (e.g., nightly, ci)`,
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		// Your payload command logic here
-		//version := args[0]
-		//stream := args[1]
-		fmt.Println("payload called")
+		version := args[0]
+		stream := args[1]
+		fmt.Println("payload called with version:", version, "and stream:", stream)
 		// Rest of your code...
 	},
+}
+
+func NewPayloadCmd() *cobra.Command {
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAllUrl, "showAllUrl", "a", false, "Show all url")
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.showSuccess, "showSuccess", "c", false, "Show success")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.dbMode, "dbMode", "d", "", "DB mode (rcWebpage, sippyDB, rcAPI)")
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.printTestDetail, "printTestDetail", "t", false, "Print test detail")
+	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrJobDetail, "showAggrJobDetail", "j", false, "Show aggregated job detail")
+	return PayloadCmd
 }

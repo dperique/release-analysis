@@ -17,7 +17,7 @@ func CreateRelContCommand() *cobra.Command {
 		Long:  `We can view payload or analysis of release-controller or prowjobs`,
 	}
 
-	rootCmd.AddCommand(payload.PayloadCmd)
-	rootCmd.AddCommand(job_analysis.AnalysisCmd)
+	rootCmd.AddCommand(payload.NewPayloadCmd())
+	rootCmd.AddCommand(job_analysis.NewAnalysisCmd())
 	return rootCmd
 }
