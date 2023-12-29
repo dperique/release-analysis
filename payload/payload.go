@@ -17,6 +17,7 @@ type payloadOptsType struct {
 	showSuccess          bool
 	showSuccessStr       string
 	dbMode               string
+	payload_getter       payload_processing.PayloadGetter
 	printTestDetail      bool
 	printTestDetailStr   string
 	showAggrJobDetail    bool
@@ -62,6 +63,18 @@ var PayloadCmd = &cobra.Command{
 		if payloadOpts.showAggrJobDetailStr == "true" {
 			payloadOpts.showAggrJobDetail = true
 		}
+
+		switch payloadOpts.dbMode {
+		case "rcWebpage":
+			payloadOpts.payload_getter = payload_processing.RcWebpagePayloadGetter{}
+		case "sippyDB":
+			payloadOpts.payload_getter = payload_processing.SippyDBPayloadGetter{}
+		case "rcAPI":
+			payloadOpts.payload_getter = payload_processing.RcAPIPayloadGetter{}
+		default:
+			fmt.Println("Unknown dbMode; defaulting to rcWebpage")
+			payloadOpts.payload_getter = payload_processing.RcWebpagePayloadGetter{}
+		}
 		payloadOpts.Run()
 	},
 }
@@ -94,7 +107,7 @@ func (o *payloadOptsType) Run() {
 	}
 	fmt.Printf("Getting: %s %s\n", o.version, o.stream)
 
-	payloadItems := payload_processing.GetPayloadItems(o.version, o.stream, o.dbMode)
+	payloadItems := payload_processing.GetPayloadItems(o.version, o.stream, payloadOpts.payload_getter)
 
 	for _, payloadItem := range payloadItems {
 		payload_processing.ProcessPayloadItem(payloadItem, o.showAllUrl, o.showAggrTimes, o.showSuccess, o.printTestDetail, o.showAggrJobDetail)
