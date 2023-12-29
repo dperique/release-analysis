@@ -4,7 +4,7 @@ This will help TRT watchers analyze release payloads and prow jobs from release 
 
 ## Usage
 
-The `-d xxxx` option allows you to pull release payload information from these places:
+The `-d xxxx` option allows you to pull release payload tags (e.g., 4.15.0-0.nightly-2023-12-25-100326) from these places:
 
 * [release-controller](https://amd64.ocp.releases.ci.openshift.org/) webpage via rudimentary scraping
   * this gets you the latest payloads (including those in progress)

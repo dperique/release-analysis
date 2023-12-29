@@ -8,14 +8,19 @@ import (
 )
 
 type payloadOptsType struct {
-	version           string
-	stream            string
-	showAllUrl        bool
-	showAggrTimes     bool
-	showSuccess       bool
-	dbMode            string
-	printTestDetail   bool
-	showAggrJobDetail bool
+	version              string
+	stream               string
+	showAllUrl           bool
+	showAllUrlStr        string
+	showAggrTimes        bool
+	showAggrTimesStr     string
+	showSuccess          bool
+	showSuccessStr       string
+	dbMode               string
+	printTestDetail      bool
+	printTestDetailStr   string
+	showAggrJobDetail    bool
+	showAggrJobDetailStr string
 }
 
 var payloadOpts payloadOptsType
@@ -40,17 +45,34 @@ var PayloadCmd = &cobra.Command{
 		}
 		payloadOpts.stream = stream
 
+		payloadOpts.showAllUrl = true
+		if payloadOpts.showAllUrlStr == "false" {
+			payloadOpts.showAllUrl = false
+		}
+		payloadOpts.showAggrTimes = true
+		if payloadOpts.showAggrTimesStr == "false" {
+			payloadOpts.showAggrTimes = false
+		}
+		if payloadOpts.showSuccessStr == "true" {
+			payloadOpts.showSuccess = true
+		}
+		if payloadOpts.printTestDetailStr == "true" {
+			payloadOpts.printTestDetail = true
+		}
+		if payloadOpts.showAggrJobDetailStr == "true" {
+			payloadOpts.showAggrJobDetail = true
+		}
 		payloadOpts.Run()
 	},
 }
 
 func NewPayloadCmd() *cobra.Command {
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAllUrl, "showAllUrl", "a", true, "Show all url")
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrTimes, "showAggrTimes", "s", true, "Show aggregated times")
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.showSuccess, "showSuccess", "c", false, "Show success")
-	PayloadCmd.Flags().StringVarP(&payloadOpts.dbMode, "dbMode", "d", "rcWebpage", "DB mode (rcWebpage, sippyDB, rcAPI)")
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.printTestDetail, "printTestDetail", "t", false, "Print test detail")
-	PayloadCmd.Flags().BoolVarP(&payloadOpts.showAggrJobDetail, "showAggrJobDetail", "j", false, "Show aggregated job detail")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.showAllUrlStr, "showAllUrl", "a", "true", "Show all url (suppress passing payload urls by default))")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.showAggrTimesStr, "showAggrTimes", "s", "true", "Show duration for underlying prowjobs for aggregated jobs")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.showSuccessStr, "showSuccess", "c", "false", "Show jobs even though they were successful (show only failed jobs by default)")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.dbMode, "dbMode", "d", "rcWebpage", "DB mode (rcWebpage (default), sippyDB, rcAPI)")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.printTestDetailStr, "printTestDetail", "t", "false", "Print test detail")
+	PayloadCmd.Flags().StringVarP(&payloadOpts.showAggrJobDetailStr, "showAggrJobDetail", "j", "false", "Show aggregated job detail")
 	return PayloadCmd
 }
 
