@@ -3,6 +3,7 @@ package payload
 import (
 	"fmt"
 
+	"github.com/dperique/release-analysis/payload_processing"
 	"github.com/spf13/cobra"
 )
 
@@ -43,16 +44,27 @@ func NewPayloadCmd() *cobra.Command {
 	return PayloadCmd
 }
 
-func (p *payloadOptsType) Run() {
+func (o *payloadOptsType) Run() {
 	fmt.Println("Run called")
-	fmt.Println("version:", p.version)
-	fmt.Println("stream:", p.stream)
-	fmt.Println("showAllUrl:", p.showAllUrl)
-	fmt.Println("showAggrTimes:", p.showAggrTimes)
-	fmt.Println("showSuccess:", p.showSuccess)
-	fmt.Println("dbMode:", p.dbMode)
-	fmt.Println("printTestDetail:", p.printTestDetail)
-	fmt.Println("showAggrJobDetail:", p.showAggrJobDetail)
+	fmt.Println("version:", o.version)
+	fmt.Println("stream:", o.stream)
+	fmt.Println("showAllUrl:", o.showAllUrl)
+	fmt.Println("showAggrTimes:", o.showAggrTimes)
+	fmt.Println("showSuccess:", o.showSuccess)
+	fmt.Println("dbMode:", o.dbMode)
+	fmt.Println("printTestDetail:", o.printTestDetail)
+	fmt.Println("showAggrJobDetail:", o.showAggrJobDetail)
 
 	defer fmt.Println("Finished listing the payloads")
+
+	for i := 0; i < 12; i++ {
+		fmt.Println()
+	}
+	fmt.Printf("Getting: %s %s\n", o.version, o.stream)
+
+	payloadItems := payload_processing.GetPayloadItems(o.version, o.stream, o.dbMode)
+
+	for _, payloadItem := range payloadItems {
+		payload_processing.ProcessPayloadItem(payloadItem, o.showAllUrl, o.showAggrTimes, o.showSuccess, o.printTestDetail, o.showAggrJobDetail)
+	}
 }

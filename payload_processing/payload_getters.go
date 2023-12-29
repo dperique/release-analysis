@@ -9,14 +9,6 @@ import (
 	goutils "github.com/dperique/goutils"
 )
 
-type dbModeType int
-
-const (
-	rcWebpage dbModeType = iota
-	sippyDB
-	rcAPI
-)
-
 type payloadGetter interface {
 	// Given a release version and stream, return a list of payload items.
 	getUrls(aVersion, aStream string) []ReleasePayload
@@ -233,28 +225,23 @@ func (g rcAPIPayloadGetter) getUrls(aVersion, aStream string) []ReleasePayload {
 	return ret
 }
 
-func getPayloadItems(releaseVersion, releaseStream string, dbMode dbModeType) []ReleasePayload {
+func GetPayloadItems(releaseVersion, releaseStream string, dbMode string) []ReleasePayload {
 	var payloadItems []ReleasePayload
 	var payloadGetter payloadGetter
 
 	switch dbMode {
-	case rcWebpage:
+	case "rcWebpage":
 		payloadGetter = rcWebpagePayloadGetter{}
-	case sippyDB:
+	case "sippyDB":
 		payloadGetter = sippyDBPayloadGetter{}
-	case rcAPI:
+	case "rcAPI":
 		payloadGetter = rcAPIPayloadGetter{}
 	default:
-		fmt.Println("Something is broken")
+		fmt.Println("Unknown dbMode; defaulting to rcWebpage")
+		payloadGetter = rcWebpagePayloadGetter{}
 	}
 
 	payloadItems = payloadGetter.getUrls(releaseVersion, releaseStream)
 
 	return payloadItems
-}
-
-func processPayloadItems(payloadItems []ReleasePayload, showAllUrl, showAggrTimes, showSuccess, printTestDetail, showAggrJobDetail bool) {
-	for _, payloadItem := range payloadItems {
-		ProcessPayloadItem(payloadItem, showAllUrl, showAggrTimes, showSuccess, printTestDetail, showAggrJobDetail)
-	}
 }
