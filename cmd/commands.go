@@ -12,7 +12,7 @@ func CreateRelContCommand() *cobra.Command {
 
 	// Create a root command
 	var rootCmd = &cobra.Command{
-		Use:   "relCont-again view",
+		Use:   "release-analysis view",
 		Short: "view payload or analysis",
 		Long:  `We can view payload or analysis of release-controller or prowjobs`,
 	}
