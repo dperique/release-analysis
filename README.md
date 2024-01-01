@@ -1,13 +1,15 @@
 # Release Analysis
 
-This will help TRT watchers analyze release payloads and prow jobs from release payloads
+This will help Redhat Openshift [TRT (Technical Release Team)](https://docs.ci.openshift.org/docs/release-oversight/the-technical-release-team/) watchers analyze release payloads and prow jobs from release payloads.
+
+This command may expand to include other useful tools.
 
 ## Usage
 
 The `-d xxxx` option allows you to pull release payload tags (e.g., 4.15.0-0.nightly-2023-12-25-100326) from these places:
 
 * [release-controller](https://amd64.ocp.releases.ci.openshift.org/) webpage via rudimentary scraping
-  * this gets you the latest payloads (including those in progress)
+  * this gets you the latest payloads (including those in progress).  This is the default mode.
 * [sippy database](https://sippy.dptools.openshift.org/sippy-ng/)
   * this gets you all payloads persisted in sippy's DB (which will be more than in the release-controller)
   * data from here will be upto one hour old
@@ -30,7 +32,7 @@ Examples for `analysis`:
 ./release-analysis analysis https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/aggregated-gcp-ovn-rt-upgrade-4.16-minor-release-openshift-release-analysis-aggregator/1739449957754081280
 ```
 
-# Tips on Usage
+## Tips on Usage
 
 This section contains some ways to use this tool.
 
