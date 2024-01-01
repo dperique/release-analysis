@@ -29,3 +29,19 @@ Examples for `analysis`:
 ./release-analysis analysis https://amd64.ocp.releases.ci.openshift.org/releasestream/4.15.0-0.nightly/release/4.15.0-0.nightly-2023-12-23-011438
 ./release-analysis analysis https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/aggregated-gcp-ovn-rt-upgrade-4.16-minor-release-openshift-release-analysis-aggregator/1739449957754081280
 ```
+
+# Tips on Usage
+
+This section contains some ways to use this tool.
+
+One way to use the tool is within the vscode terminal.  The vscode terminal allows the abiilty to click on a line to navigate to it as well as the ability to search the output in as robust a fashion as searching the file (including case sensitivity and regex):
+
+* Run this in a vscode terminal and all the links will be "clickable"
+  * start vscode, bring up the terminal window at the bottom (control-backtick)
+  * Command Pallete: shift-command-p ; select "Terminal: Move Terminal Into Editor Area"
+  * Move the Terminal tab outside of the vscode main window (so it becomes a standalone window)
+* Run the commands in a while loop so they refresh every 15m with the latest info
+* Create a terminal tab for different versions (e.g., one terminal, two tabs (one with 4.16 nightly and another with 4.15 nightly)).
+* run ./release-analysis analysis on an aggregated job for details
+  * See a particular prowjob buildID that failed, click on it
+  * Use command-f to search for that buildID in the output (it's already in the search box), click the matching link to view the prowjob

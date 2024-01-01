@@ -2,7 +2,6 @@ package job_analysis
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 
