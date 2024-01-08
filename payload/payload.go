@@ -105,7 +105,10 @@ func (o *payloadOptsType) Run() {
 	for i := 0; i < 12; i++ {
 		fmt.Println()
 	}
-	fmt.Printf("Getting: %s %s\n", o.version, o.stream)
+
+	// Contruct the url for the the requested payload for easy access.
+	payload_url := fmt.Sprintf("https://amd64.ocp.releases.ci.openshift.org/#%s.0-0.%s", o.version, o.stream)
+	fmt.Printf("Getting: %s %s, %s\n", o.version, o.stream, payload_url)
 
 	payloadItems := payload_processing.GetPayloadItems(o.version, o.stream, payloadOpts.payload_getter)
 
