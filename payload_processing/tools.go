@@ -48,7 +48,7 @@ var (
 )
 
 // jobSummaryLineRegex is used to extract info about a specific job run in a job-run-summary.html file
-var jobSummaryLineRegex = regexp.MustCompile(`\<li\>\<a target="_blank" href="(.*)"\>.*\</a\> (failure|success) after (.*)`)
+var jobSummaryLineRegex = regexp.MustCompile(`\<li\>\<a target="_blank" href="(.*)"\>.*\</a\> build[0-9]+ (failure|success) after (.*)`)
 
 // getJobStr takes the parts of a Job and returns a nicely formatted string that can be used to
 // show a summary of it (this includes the last part of the Url, build farm server, time, and graph).
@@ -142,7 +142,15 @@ func getBodyTimeout(url string, timeout int) ([]byte, error) {
 // getSummaryPrefix takes an aggregated job and gets the artifacts directory
 // prefix that will lead to its two summary files.
 func getSummaryPrefix(aggrJobUrl string) string {
-	return strings.Replace(aggrJobUrl, "https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/", "https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/origin-ci-test/logs/", 1)
+	// Depending on the gcs bucket name, we'll have to use a different pattern.
+	var pattern string
+	if strings.Contains(aggrJobUrl, "test-platform-results") {
+		pattern = `https://prow.ci.openshift.org/view/gs/test-platform-results/logs/`
+	} else {
+		pattern = `https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/`
+	}
+
+	return strings.Replace(aggrJobUrl, pattern, "https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/origin-ci-test/logs/", 1)
 }
 
 // getSummaryUrl takes an aggregated job and returns the aggregation-testrun-summary.html
@@ -910,6 +918,9 @@ func PrintAggrSummaryTests(aggrJobUrl string, showAggrTimes bool, printTestDetai
 	// Ensure we got all MAX_JOB jobs
 	foundAllJobs := false
 	for i := 0; i < len(lines); i++ {
+		if i == 25 {
+			fmt.Println()
+		}
 		m := jobSummaryLineRegex.FindStringSubmatch(lines[i])
 		if len(m) > 1 {
 			wg.Add(1)
