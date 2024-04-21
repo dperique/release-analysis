@@ -1,4 +1,4 @@
-package cmd
+package releaseanalysiscommands
 
 import (
 	"github.com/dperique/release-analysis/job_analysis"

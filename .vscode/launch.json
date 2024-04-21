@@ -8,12 +8,24 @@
             "name": "release-analysis",
             "type": "go",
             "request": "launch",
-            "program": "main.go",
+            "program": "${workspaceFolder}/cmd/release-analysis",
             "args": [
                 "analysis",
                 "https://prow.ci.openshift.org/view/gs/test-platform-results/logs/aggregated-gcp-ovn-rt-upgrade-4.15-minor-release-openshift-release-analysis-aggregator/1747101520358281216"
                 //"https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/aggregated-aws-sdn-upgrade-4.16-micro-release-openshift-release-analysis-aggregator/1742282669867143168"
             ],
+        },
+        {
+            "name": "gcs-node-download",
+            "type": "go",
+            "request": "launch",
+            "program": "${workspaceFolder}/cmd/gcs-node-download",
+            "args": [
+                "junit",
+                "https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-openshift-release-master-nightly-4.16-e2e-aws-sdn-upgrade/1781860190195290112/artifacts/e2e-aws-sdn-upgrade/openshift-e2e-test/artifacts/junit/",
+                "audit.*.json"
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }

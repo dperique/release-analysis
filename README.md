@@ -1,10 +1,12 @@
 # Release Analysis
 
-This will help Redhat Openshift [TRT (Technical Release Team)](https://docs.ci.openshift.org/docs/release-oversight/the-technical-release-team/) watchers analyze release payloads and prow jobs from release payloads.
+These are tools that help Redhat Openshift [TRT (Technical Release Team)](https://docs.ci.openshift.org/docs/release-oversight/the-technical-release-team/) watchers analyze release payloads and prow jobs from release payloads.
 
-This command may expand to include other useful tools.
+## Building
 
-## Usage
+See [Makefile](./Makefile) for how to build.
+
+## release-analysis
 
 The `-d xxxx` option allows you to pull release payload tags (e.g., 4.15.0-0.nightly-2023-12-25-100326) from these places:
 
@@ -31,6 +33,29 @@ Examples for `analysis`:
 ./release-analysis analysis https://amd64.ocp.releases.ci.openshift.org/releasestream/4.15.0-0.nightly/release/4.15.0-0.nightly-2023-12-23-011438
 ./release-analysis analysis https://prow.ci.openshift.org/view/gs/origin-ci-test/logs/aggregated-gcp-ovn-rt-upgrade-4.16-minor-release-openshift-release-analysis-aggregator/1739449957754081280
 ```
+
+## gcs-finder
+
+This tool will help find files in a prow job's Artifacts GCS bucket using a regex.  Get the link from the Artifacts link in the upper right corner of a prow job main page and pass it as a path using the `-path` option.  If the prow job main page does not load, you can use the `-jobName` and `-jobID` options to specify the prow job name and prow job ID and the tool will craft a GCS bucket link for you.
+
+Set GCP credentials using one of these methods:
+
+* `export GOOGLE_APPLICATION_CREDENTIALS="/some/path/<project>-xxxx.json"`
+* use the `-cred` option to specify the path to your GCS credentials file
+
+This tool is useful if you have a rough idea of what the file is but you don't know where to find it given that prow jobs tend to have thousands of artifact files spread over multiple "directories" where you need to click.
+
+Example:
+
+```bash
+./gcs-finder -regex 'pods.json' -path https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-openshift-release-master-nightly-4.16-e2e-aws-sdn-upgrade/1781860190195290112/ -cred /some/path/<project>-xxxx.json
+```
+
+## gcs-node-download
+
+Use this tool to download node log files or other files by specifying them via gcs bucket URL and regex.
+
+This tool is useful for downloading node logs which are zipp'ed.  It will download them and automatically unzip them for you.
 
 ## Tips on Usage
 
