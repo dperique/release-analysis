@@ -75,7 +75,7 @@ func (a *analysisOptsType) Run() {
 		// Extract the aggregated job name
 		//re := regexp.MustCompile(`logs/(.*?)-4.(14|13)`)
 		// Branching TODO: We have to add another version for every release
-		re := regexp.MustCompile(`logs/(.*?)-4.(16|15|14|13).*?/(\d+)$`)
+		re := regexp.MustCompile(`logs/(.*?)-4.(17|16|15|14|13).*?/(\d+)$`)
 
 		match := re.FindStringSubmatch(aggrJobUrl)
 		var aggrJobName string

@@ -34,7 +34,7 @@ var PayloadCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		version := args[0]
-		if version != "4.13" && version != "4.14" && version != "4.15" && version != "4.16" {
+		if version != "4.13" && version != "4.14" && version != "4.15" && version != "4.16" && version != "4.17" {
 			fmt.Println("Invalid version. Version must be between 4.13 and 4.16.")
 			return
 		}

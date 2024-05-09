@@ -48,7 +48,10 @@ func (g RcWebpagePayloadGetter) getUrls(aVersion, aStream string) []ReleasePaylo
 	var prevVer string
 
 	// Branching TODO: we have to add another version for every release
+	// TODO: I think we can easily automate this.
 	switch aVersion {
+	case "4.17":
+		prevVer = "4.16"
 	case "4.16":
 		prevVer = "4.15"
 	case "4.15":
