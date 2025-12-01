@@ -57,6 +57,33 @@ Use this tool to download node log files or other files by specifying them via g
 
 This tool is useful for downloading node logs which are zipp'ed.  It will download them and automatically unzip them for you.
 
+## nightly-status.py
+
+Python tool to quickly check the latest nightly build status across OpenShift versions 4.12-4.22. Shows version, latest nightly timestamp, phase, and age.
+
+Setup (first time only):
+```bash
+python -m venv venv
+pip install -r requirements.txt
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Examples:
+```bash
+# Check all versions 4.12-4.22
+python3 nightly-status.py
+
+# Check specific versions
+python3 nightly-status.py --versions 4.15,4.16,4.17
+
+# JSON output for automation
+python3 nightly-status.py --json
+
+# Show progress while fetching
+python3 nightly-status.py --verbose
+```
+
 ## Tips on Usage
 
 This section contains some ways to use this tool.
