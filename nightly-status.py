@@ -18,6 +18,7 @@ import requests
 import sys
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
 
 
 def _parse_timestamp_from_tag(tag_name: str) -> Optional[datetime]:
@@ -147,6 +148,9 @@ def print_table_output(results: Dict[str, dict]) -> None:
     Return Value(s):
         None
     """
+    est_time = datetime.now(timezone.utc).astimezone(ZoneInfo('America/New_York'))
+    run_time = est_time.strftime('%Y-%m-%d %H:%M:%S EST')
+    print(f"\nRun time: {run_time}")
     print("\nOpenShift Nightly Build Status")
     print("=" * 60)
     print(f"{'Version':<8} {'Latest Nightly':<35} {'Phase':<10} {'Age':<8}")
@@ -201,7 +205,13 @@ def main() -> None:
     results = get_nightly_status(versions, show_progress=args.verbose)
 
     if args.json:
-        print(json.dumps(results, indent=2))
+        est_time = datetime.now(timezone.utc).astimezone(ZoneInfo('America/New_York'))
+        run_time = est_time.strftime('%Y-%m-%d %H:%M:%S EST')
+        output = {
+            'run_time': run_time,
+            'results': results
+        }
+        print(json.dumps(output, indent=2))
     else:
         print_table_output(results)
 
